@@ -1,6 +1,6 @@
 # nemara.ai
 
-Public website for Nemara OÜ. Static HTML, English + Japanese, served by GitHub Pages from `docs/`.
+Public website for Nemara. Static HTML, English + Japanese, served by GitHub Pages from `docs/`.
 
 - `docs/index.html` (EN), `docs/ja/index.html` (JA).
 - `docs/assets/site.css` styles, `docs/assets/site.js` the hero's animated contour field and scroll effects.
