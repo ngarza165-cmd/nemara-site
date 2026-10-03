@@ -190,9 +190,7 @@ html[lang="ja"] .belief h3{font-size:1.3rem;line-height:1.5}
 .market{position:relative;overflow:hidden;border-radius:22px;padding:clamp(28px,4vw,48px);min-height:440px;color:var(--on-night);
   display:flex;flex-direction:column;justify-content:flex-end;isolation:isolate}
 .market::before{content:"";position:absolute;inset:0;z-index:-1;
-  background:
-    repeating-radial-gradient(circle at var(--cx) var(--cy), transparent 0 26px, rgba(233,236,227,.07) 26px 27px),
-    var(--bg)}
+  background:var(--bg)}
 .market.jp{--bg:radial-gradient(120% 80% at 90% 0%,#5A231C 0%,#1A1310 60%,#0D110C 100%);--cx:82%;--cy:18%}
 .market.eu{--bg:radial-gradient(120% 80% at 90% 0%,#2B4637 0%,#121A14 60%,#0D110C 100%);--cx:78%;--cy:24%}
 .market .where{font-size:.72rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--on-night-muted);
@@ -211,8 +209,7 @@ html[lang="ja"] .market p{max-width:none}
 .closing{background:var(--night);color:var(--on-night);border-top:0;overflow:hidden;isolation:isolate}
 .closing::before{content:"";position:absolute;inset:0;z-index:-1;opacity:.9;
   background:
-    repeating-radial-gradient(circle at 85% 120%, transparent 0 34px, rgba(233,236,227,.06) 34px 35px),
-    radial-gradient(70% 90% at 85% 110%, rgba(168,54,43,.35), transparent 70%)}
+    radial-gradient(70% 90% at 85% 110%, rgba(60,91,73,.45), transparent 70%)}
 .closing .statement{color:var(--on-night);max-width:16ch}
 html[lang="ja"] .closing .statement{max-width:20em}
 .closing .statement em{color:var(--ember)}
