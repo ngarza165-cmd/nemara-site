@@ -1,12 +1,12 @@
 /* Nemara site behaviour: solid nav after the hero, reveal-on-scroll, and the hero scene.
 
    The hero scene: contour lines (marching squares over slowly drifting 3D noise) for the
-   landscape, and on it an Asiatic black bear — Japan's "moon bear" — drawn as a mesh of
-   data points. On load the points fly in from scattered positions and assemble into the
-   animal: fragmented signals becoming one understood entity. A pulse at the neck reads as
-   a collar fix; the pale points on the chest are the crescent the species is named for.
-   Static, fully assembled frame when motion is reduced; paused off-screen or in a
-   background tab. */
+   landscape, and on it four animals drawn as meshes of data points — an Asiatic black
+   bear, a sika deer, a red-crowned crane and a wolf. On load the points fly in from
+   scattered positions and assemble into the animals: fragmented signals becoming
+   understood entities. Each animal carries a red signal dot; dashed links between the
+   dots read as relationships in an ontology. Static, fully assembled frame when motion is
+   reduced; paused off-screen or in a background tab. */
 (function () {
   document.documentElement.classList.add('js');
   var reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -36,22 +36,59 @@
     if (canvas && canvas.getContext) scene(canvas, hero);
   });
 
-  // Seeded random, so the terrain and the bear's mesh are identical on every visit
+  // Seeded random, so the terrain and the meshes are identical on every visit
   function rng(seed) {
     return function () { seed = (seed * 16807) % 2147483647; return (seed - 1) / 2147483646; };
   }
 
-  // Bear silhouette, side view facing left, in a 200 x 125 box (ground at y = 117)
-  var BEAR = [7,63,10,59,16,57,22,55,26,52,29,47,31,43,33,39,32,34,34,30,38,28,42,29,45,32,46,37,49,38,
-    56,35,66,29,80,24,94,22,110,23,126,25,140,28,154,31,166,37,174,46,178,57,178,68,175,77,
-    176,86,178,96,180,106,182,112,182,117,164,117,162,113,163,104,160,94,154,88,
-    150,90,149,98,148,108,148,113,146,117,130,117,130,112,133,104,134,94,132,88,
-    122,87,108,88,96,87,
-    94,94,95,104,96,112,96,117,80,117,80,112,81,104,80,95,78,90,
-    75,92,74,100,70,108,68,113,66,117,48,117,48,113,52,110,54,102,55,92,54,84,
-    50,79,44,76,36,74,27,73,19,72,13,70,9,68,7,66];
-  var MOON = [44,62,52,64,60,68,66,74,63,79,57,74,50,69,44,67]; // chest crescent
-  var COLLAR = [57, 54]; // on the neck, where a GPS collar sits
+  /* Silhouettes, side view facing left. w/h is each drawing's box; dot is the red signal;
+     delay staggers the assembly. Desktop (d) and phone (m) placements are fractions:
+     x of the free area to the right of the headline (d) or of a centred strip (m), y of
+     the hero height (d) or of the band above the headline (m), and width (fraction of W
+     on desktop, of the strip on phones). */
+  var ANIMALS = [
+    { name: 'bear', w: 200, h: 120, delay: 0,
+      poly: [7,63,10,59,16,57,22,55,26,52,29,47,31,43,33,39,32,34,34,30,38,28,42,29,45,32,46,37,49,38,
+        56,35,66,29,80,24,94,22,110,23,126,25,140,28,154,31,166,37,174,46,178,57,178,68,175,77,
+        176,86,178,96,180,106,182,112,182,117,164,117,162,113,163,104,160,94,154,88,
+        150,90,149,98,148,108,148,113,146,117,130,117,130,112,133,104,134,94,132,88,
+        122,87,108,88,96,87,
+        94,94,95,104,96,112,96,117,80,117,80,112,81,104,80,95,78,90,
+        75,92,74,100,70,108,68,113,66,117,48,117,48,113,52,110,54,102,55,92,54,84,
+        50,79,44,76,36,74,27,73,19,72,13,70,9,68,7,66],
+      moon: [44,62,52,64,60,68,66,74,63,79,57,74,50,69,44,67], // the chest crescent
+      eye: [30, 49], dot: [57, 54],
+      d: { x: 0.92, y: 0.42, w: 0.2 }, m: { x: 0.3, y: 1, w: 0.3 } },
+    { name: 'deer', w: 175, h: 192, delay: 0.25,
+      poly: [22,62,26,58,34,54,40,50,43,45,42,38,34,34,33,32,35,31,42,34,44,26,38,18,37,16,39,16,45,21,48,12,50,8,52,10,51,18,49,28,48,38,48,46,
+        50,46,58,42,61,42,58,47,53,51,54,54,60,64,66,74,72,82,90,84,110,85,130,85,148,86,156,90,161,97,165,95,166,100,162,104,163,112,162,120,
+        161,130,158,142,159,158,160,174,161,186,161,190,153,190,153,186,153,172,152,158,150,145,148,135,146,128,
+        143,135,141,150,141,170,142,186,142,190,134,190,134,186,134,170,134,150,135,136,128,128,
+        110,126,92,125,
+        88,130,88,150,88,170,89,186,89,190,81,190,81,186,81,170,80,150,80,132,78,130,
+        76,135,74,155,72,172,72,186,72,190,64,190,64,186,65,172,66,155,67,136,66,122,64,110,
+        60,98,54,86,46,74,40,68,32,68,26,66,22,64,21,63],
+      eye: [34, 57], dot: [140, 104],
+      d: { x: 0.05, y: 0.21, w: 0.1 }, m: { x: 0.02, y: 1, w: 0.17 } },
+    { name: 'wolf', w: 185, h: 126, delay: 0.45,
+      poly: [6,50,12,46,22,42,28,38,31,31,35,21,38,20,42,30,46,34,56,36,68,36,90,38,115,40,135,42,148,45,156,50,164,60,169,74,171,88,168,94,164,90,162,76,156,64,152,64,
+        154,72,153,86,157,98,156,110,154,120,156,124,144,124,144,120,148,110,148,98,144,88,140,82,
+        136,84,133,96,132,108,132,120,132,124,122,124,123,120,125,108,126,96,126,84,
+        118,80,104,76,88,79,74,84,
+        73,92,73,104,74,116,74,124,64,124,65,120,66,108,66,94,63,92,
+        61,98,58,108,55,116,53,121,53,124,43,124,43,120,48,114,51,104,53,94,52,80,
+        48,68,42,60,32,58,22,56,14,54,8,53,6,52],
+      eye: [24, 44], dot: [80, 50],
+      d: { x: 0.36, y: 0.66, w: 0.13 }, m: { x: 0.72, y: 1, w: 0.24 } },
+    { name: 'crane', w: 220, h: 102, delay: 0.65,
+      poly: [4,78,14,74,20,72,24,71,28,74,40,77,60,80,82,80,
+        88,66,96,50,108,34,122,20,138,8,148,2,154,1,151,7,160,5,156,13,166,12,160,20,170,21,162,28,168,32,158,36,152,46,146,56,140,66,132,76,
+        136,80,150,82,160,84,166,88,176,90,200,92,214,92,216,95,200,96,176,96,160,96,
+        146,98,128,100,110,99,94,95,86,90,78,88,60,88,40,84,28,81,20,80,14,80,6,79],
+      eye: null, dot: [21, 75], // the red crown
+      d: { x: 0.64, y: 0.09, w: 0.15 }, m: { x: 0.64, y: 0, w: 0.3 } }
+  ];
+  var LINKS = [[0, 1], [0, 2], [0, 3], [1, 2], [1, 3]]; // bear–deer, bear–wolf, …
 
   function inside(poly, x, y) {
     var c = false;
@@ -62,42 +99,37 @@
     return c;
   }
 
-  function buildMesh() {
-    var r = rng(4271), pts = [], i, j;
-    // Outline points, evenly spaced along the silhouette
-    for (i = 0; i < BEAR.length; i += 2) {
-      var x0 = BEAR[i], y0 = BEAR[i + 1], x1 = BEAR[(i + 2) % BEAR.length], y1 = BEAR[(i + 3) % BEAR.length];
-      var len = Math.hypot(x1 - x0, y1 - y0), n = Math.max(1, Math.round(len / 4.2));
+  // Points (outline + jittered interior) and links to nearest neighbours, at spacing s
+  function buildMesh(a, s, seed) {
+    var r = rng(seed), poly = a.poly, pts = [], i, j;
+    var step = s * 0.62;
+    for (i = 0; i < poly.length; i += 2) {
+      var x0 = poly[i], y0 = poly[i + 1], x1 = poly[(i + 2) % poly.length], y1 = poly[(i + 3) % poly.length];
+      var n = Math.max(1, Math.round(Math.hypot(x1 - x0, y1 - y0) / step));
       for (j = 0; j < n; j++) pts.push({ x: x0 + (x1 - x0) * j / n, y: y0 + (y1 - y0) * j / n, edge: true });
     }
-    // Interior points on a jittered grid
-    var s = 6.4;
-    for (var gx = 0; gx < 200; gx += s) for (var gy = 15; gy < 120; gy += s) {
+    for (var gx = 0; gx < a.w; gx += s) for (var gy = 0; gy < a.h; gy += s) {
       var x = gx + (r() - 0.5) * s * 0.9, y = gy + (r() - 0.5) * s * 0.9;
-      if (inside(BEAR, x, y)) {
-        var near = false;
-        for (j = 0; j < pts.length && !near; j++) if (pts[j].edge && Math.hypot(pts[j].x - x, pts[j].y - y) < 3) near = true;
-        if (!near) pts.push({ x: x, y: y, edge: false });
-      }
+      if (!inside(poly, x, y)) continue;
+      var near = false;
+      for (j = 0; j < pts.length && !near; j++) if (pts[j].edge && Math.hypot(pts[j].x - x, pts[j].y - y) < s * 0.45) near = true;
+      if (!near) pts.push({ x: x, y: y, edge: false });
     }
-    pts.push({ x: 30, y: 49, eye: true }); // eye
+    if (a.eye) pts.push({ x: a.eye[0], y: a.eye[1], eye: true });
     pts.forEach(function (p) {
-      p.moon = !p.eye && inside(MOON, p.x, p.y);
-      p.sx = r(); p.sy = r(); p.delay = r() * 0.9; p.ph = r() * 6.283;
+      p.moon = !!a.moon && !p.eye && inside(a.moon, p.x, p.y);
+      p.sx = r(); p.sy = r(); p.delay = a.delay + r() * 0.9; p.ph = r() * 6.283;
     });
-    // Link each point to its three nearest neighbours
-    var links = [], seen = {};
-    pts.forEach(function (p, a) {
+    var links = [], seen = {}, lim = s * 1.75;
+    pts.forEach(function (p, ia) {
       var near = [];
-      pts.forEach(function (q, b) { if (a !== b) near.push([Math.hypot(p.x - q.x, p.y - q.y), b]); });
+      pts.forEach(function (q, ib) { if (ia !== ib) near.push([Math.hypot(p.x - q.x, p.y - q.y), ib]); });
       near.sort(function (u, v) { return u[0] - v[0]; });
-      for (var k = 0; k < 3; k++) {
-        var b = near[k][1], key = a < b ? a + '-' + b : b + '-' + a;
-        if (near[k][0] < 11 && !seen[key]) {
-          // keep links inside the body (no bridging across the gaps between legs)
-          var mx = (p.x + pts[b].x) / 2, my = (p.y + pts[b].y) / 2;
-          if (inside(BEAR, mx, my) || p.edge && pts[b].edge) { seen[key] = 1; links.push([a, b]); }
-        }
+      for (var k = 0; k < 3 && k < near.length; k++) {
+        var ib = near[k][1], key = ia < ib ? ia + '-' + ib : ib + '-' + ia;
+        if (near[k][0] >= lim || seen[key]) continue;
+        var q = pts[ib];
+        if (inside(poly, (p.x + q.x) / 2, (p.y + q.y) / 2) || (p.edge && q.edge)) { seen[key] = 1; links.push([ia, ib]); }
       }
     });
     return { pts: pts, links: links };
@@ -129,8 +161,7 @@
                  l(grad(perm[AB + 1], x, y - 1, z - 1), grad(perm[BB + 1], x - 1, y - 1, z - 1), u), v), w);
     }
 
-    var W, H, dpr, cell, cols, rows, field, box;
-    var mesh = buildMesh();
+    var W, H, dpr, cell, cols, rows, field, alpha = 1;
     var LEVELS = [];
     for (var lv = -0.62; lv <= 0.62; lv += 0.075) LEVELS.push(+lv.toFixed(3));
 
@@ -141,29 +172,24 @@
       cell = W < 700 ? 12 : 15;
       cols = Math.ceil(W / cell) + 1; rows = Math.ceil(H / cell) + 1;
       field = new Float32Array(cols * rows);
-      // Wide screens: the bear stands on the right, facing the headline.
-      // Narrow screens: it sits in the band above the headline.
-      var sc;
-      if (W >= 900) {
-        sc = Math.min(W * 0.4, 700) / 200;
-        box = { x: W * 0.99 - 200 * sc, y: H * 0.47 - 66 * sc, s: sc, a: 1 };
-        // Never let the bear overlap the headline: step aside and shrink if it is wide
-        var h1 = host.querySelector('h1');
-        if (h1) {
-          // measure the text itself, not the block (which can span the full column)
-          var rg = document.createRange(); rg.selectNodeContents(h1);
-          var hr = rg.getBoundingClientRect(), hostTop = host.getBoundingClientRect().top;
-          var free = W * 0.99 - (hr.right + 48);
-          var top = hr.top - hostTop, bottom = hr.bottom - hostTop;
-          if (box.x < hr.right + 48 && box.y + 117 * sc > top && box.y < bottom) {
-            sc = Math.max(free, 300) / 200;
-            box = { x: W * 0.99 - 200 * sc, y: H * 0.47 - 66 * sc, s: sc, a: 1 };
-          }
-        }
-      } else {
-        sc = Math.min(W * 0.74, 440) / 200;
-        box = { x: (W - 200 * sc) / 2 + W * 0.04, y: 74, s: sc, a: 0.85 };
-      }
+
+      var hostTop = host.getBoundingClientRect().top, wide = W >= 900;
+      var h1 = host.querySelector('h1'), eb = host.querySelector('.eyebrow'), hr = null;
+      if (h1) { var rg = document.createRange(); rg.selectNodeContents(h1); hr = rg.getBoundingClientRect(); }
+      // Desktop: animals share the area to the right of the headline text.
+      // Phones/tablets: they share the band between the nav and the headline.
+      var L = wide ? Math.max(W * 0.56, hr ? hr.right + 56 : 0) : 0, R = W * 0.985;
+      var shrink = wide ? Math.max(0.6, Math.min(1, (R - L) / (W * 0.425))) : 1;
+      var strip = Math.min(W - 24, 540), sx0 = (W - strip) / 2;
+      var bandTop = 76, bandBottom = eb ? eb.getBoundingClientRect().top - hostTop - 22 : H * 0.3;
+      alpha = wide ? 1 : 0.9;
+      ANIMALS.forEach(function (a, k) {
+        var pl = wide ? a.d : a.m, bw = wide ? pl.w * W * shrink : pl.w * strip, sc = bw / a.w, bh = a.h * sc;
+        if (wide) a.box = { x: L + pl.x * (R - L - bw), y: pl.y * H, s: sc };
+        else a.box = { x: sx0 + pl.x * strip, y: pl.y ? bandBottom - bh : bandTop, s: sc };
+        // keep spacing on screen roughly constant, whatever the animal's size
+        a.mesh = buildMesh(a, (wide ? 10.5 : 7.5) / sc, 4271 + k * 97);
+      });
     }
 
     function sample(z) {
@@ -205,64 +231,77 @@
     }
 
     function ease(t) { return 1 - Math.pow(1 - t, 3); }
+    function settled(a, el) { return Math.min(1, Math.max(0, (el - a.delay - 1.6) / 1.2)); }
 
-    function drawBear(t, t0) {
-      var b = box, pts = mesh.pts, el = reduce ? 99 : (t - t0) / 1000;
-      // Screen position of each point: flies in from scattered start, then breathes gently
-      var P = new Array(pts.length), prog = new Array(pts.length);
-      for (var i = 0; i < pts.length; i++) {
+    function drawAnimal(a, t, el) {
+      var b = a.box, pts = a.mesh.pts, n = pts.length, P = new Array(n), prog = new Array(n), i;
+      for (i = 0; i < n; i++) {
         var q = pts[i], k = ease(Math.min(1, Math.max(0, (el - q.delay) / 1.9)));
         var tx = b.x + q.x * b.s, ty = b.y + q.y * b.s;
-        var bx = reduce ? 0 : Math.sin(t / 1400 + q.ph) * 0.7, by = reduce ? 0 : Math.cos(t / 1700 + q.ph) * 0.7;
+        var jx = reduce ? 0 : Math.sin(t / 1400 + q.ph) * 0.6, jy = reduce ? 0 : Math.cos(t / 1700 + q.ph) * 0.6;
         var sx = q.sx * W, sy = q.sy * H;
-        P[i] = [sx + (tx - sx) * k + bx, sy + (ty - sy) * k + by]; prog[i] = k;
+        P[i] = [sx + (tx - sx) * k + jx, sy + (ty - sy) * k + jy]; prog[i] = k;
       }
-      var whole = Math.min(1, Math.max(0, (el - 1.6) / 1.2));
-      // A soft shadow of the silhouette so the animal reads against the contours
+      var whole = settled(a, el);
       if (whole > 0) {
         ctx.beginPath();
-        for (i = 0; i < BEAR.length; i += 2) {
-          var X = b.x + BEAR[i] * b.s, Y = b.y + BEAR[i + 1] * b.s;
+        for (i = 0; i < a.poly.length; i += 2) {
+          var X = b.x + a.poly[i] * b.s, Y = b.y + a.poly[i + 1] * b.s;
           i ? ctx.lineTo(X, Y) : ctx.moveTo(X, Y);
         }
         ctx.closePath(); ctx.fillStyle = 'rgba(13,17,12,' + (0.66 * whole) + ')'; ctx.fill();
-        ctx.lineJoin = 'round'; ctx.lineWidth = 1.3;
-        ctx.strokeStyle = 'rgba(233,236,227,' + (0.5 * whole * b.a) + ')'; ctx.stroke();
+        ctx.lineJoin = 'round'; ctx.lineWidth = 1.2;
+        ctx.strokeStyle = 'rgba(233,236,227,' + (0.48 * whole * alpha) + ')'; ctx.stroke();
       }
-      // Links
       ctx.lineWidth = 1;
       ctx.beginPath();
-      mesh.links.forEach(function (l) {
-        var m = Math.min(prog[l[0]], prog[l[1]]);
-        if (m < 0.97) return;
+      a.mesh.links.forEach(function (l) {
+        if (Math.min(prog[l[0]], prog[l[1]]) < 0.97) return;
         ctx.moveTo(P[l[0]][0], P[l[0]][1]); ctx.lineTo(P[l[1]][0], P[l[1]][1]);
       });
-      ctx.strokeStyle = 'rgba(214,224,204,' + (0.15 * b.a) + ')'; ctx.stroke();
-      // Points
-      for (i = 0; i < pts.length; i++) {
+      ctx.strokeStyle = 'rgba(214,224,204,' + (0.15 * alpha) + ')'; ctx.stroke();
+      for (i = 0; i < n; i++) {
         var pt = pts[i], tw = reduce ? 1 : 0.75 + 0.25 * Math.sin(t / 900 + pt.ph * 3);
-        var r = pt.eye ? 1.9 : pt.moon ? 1.8 : pt.edge ? 1.35 : 1.05;
-        ctx.fillStyle = pt.moon ? 'rgba(255,240,214,' + (0.95 * b.a) + ')'
-          : pt.eye ? 'rgba(233,236,227,' + b.a + ')'
-          : 'rgba(233,236,227,' + ((pt.edge ? 0.9 : 0.42) * tw * b.a) + ')';
-        ctx.beginPath(); ctx.arc(P[i][0], P[i][1], r * Math.max(1, b.s / 3.2), 0, 6.283); ctx.fill();
+        var r = pt.eye ? 1.7 : pt.moon ? 1.6 : pt.edge ? 1.25 : 1;
+        ctx.fillStyle = pt.moon ? 'rgba(255,240,214,' + (0.95 * alpha) + ')'
+          : pt.eye ? 'rgba(233,236,227,' + alpha + ')'
+          : 'rgba(233,236,227,' + ((pt.edge ? 0.9 : 0.42) * tw * alpha) + ')';
+        ctx.beginPath(); ctx.arc(P[i][0], P[i][1], r, 0, 6.283); ctx.fill();
       }
-      // Collar signal
-      if (whole > 0) {
-        var cx = b.x + COLLAR[0] * b.s, cy = b.y + COLLAR[1] * b.s;
+    }
+
+    function dotXY(a) { return [a.box.x + a.dot[0] * a.box.s, a.box.y + a.dot[1] * a.box.s]; }
+
+    function drawSignals(t, el) {
+      // Dashed links between the animals' signals, with a slow flow along them
+      var all = Math.min.apply(null, ANIMALS.map(function (a) { return settled(a, el); }));
+      if (all > 0) {
+        ctx.save(); ctx.setLineDash([3, 6]); ctx.lineDashOffset = reduce ? 0 : -t / 90;
+        ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(224,98,79,' + (0.34 * all) + ')';
+        ctx.beginPath();
+        LINKS.forEach(function (l) {
+          var A = dotXY(ANIMALS[l[0]]), B = dotXY(ANIMALS[l[1]]);
+          ctx.moveTo(A[0], A[1]); ctx.lineTo(B[0], B[1]);
+        });
+        ctx.stroke(); ctx.restore();
+      }
+      ANIMALS.forEach(function (a, k) {
+        var w = settled(a, el); if (w <= 0) return;
+        var c = dotXY(a), big = W >= 900 ? 26 : 16;
         if (!reduce) for (var ring = 0; ring < 2; ring++) {
-          var ph = ((t / 2400) + ring * 0.5) % 1;
-          ctx.strokeStyle = 'rgba(224,98,79,' + (0.6 * (1 - ph) * whole) + ')';
-          ctx.beginPath(); ctx.arc(cx, cy, 4 + ph * 34, 0, 6.283); ctx.stroke();
+          var ph = ((t / 2400) + ring * 0.5 + k * 0.23) % 1;
+          ctx.strokeStyle = 'rgba(224,98,79,' + (0.6 * (1 - ph) * w) + ')';
+          ctx.beginPath(); ctx.arc(c[0], c[1], 3 + ph * big, 0, 6.283); ctx.stroke();
         }
-        ctx.fillStyle = 'rgba(224,98,79,' + whole + ')';
-        ctx.beginPath(); ctx.arc(cx, cy, 3.6, 0, 6.283); ctx.fill();
-      }
+        ctx.fillStyle = 'rgba(224,98,79,' + w + ')';
+        ctx.beginPath(); ctx.arc(c[0], c[1], W >= 900 ? 3.2 : 2.6, 0, 6.283); ctx.fill();
+      });
     }
 
     var t0 = null;
     function draw(t) {
       if (t0 === null) t0 = t;
+      var el = reduce ? 99 : (t - t0) / 1000;
       sample(t * 0.000028);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.clearRect(0, 0, W, H);
@@ -273,14 +312,15 @@
         else { ctx.strokeStyle = 'rgba(214,224,204,0.085)'; ctx.lineWidth = 1; }
         iso(L);
       }
-      drawBear(t, t0);
+      ANIMALS.forEach(function (a) { drawAnimal(a, t, el); });
+      drawSignals(t, el);
     }
 
     var running = false, visible = true, last = 0, raf;
     function loop(t) {
       if (!running) return;
-      // Smooth while the bear assembles, then a calmer frame rate
-      var gap = t0 !== null && t - t0 < 3500 ? 16 : 40;
+      // Smooth while the animals assemble, then a calmer frame rate
+      var gap = t0 !== null && t - t0 < 4200 ? 16 : 40;
       if (t - last >= gap) { draw(t); last = t; }
       raf = requestAnimationFrame(loop);
     }
@@ -288,8 +328,8 @@
     function stop() { running = false; cancelAnimationFrame(raf); }
 
     resize();
-    if (reduce) { draw(0); }
-    // Headline width changes once the web font arrives; re-fit the bear then
+    if (reduce) draw(0);
+    // Headline size changes once the web font arrives; re-fit the animals then
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(function () { resize(); if (reduce) draw(0); });
     var rt;
     window.addEventListener('resize', function () {
