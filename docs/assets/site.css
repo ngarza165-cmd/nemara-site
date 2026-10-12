@@ -155,28 +155,6 @@ html[lang="ja"] .shift h3{font-size:1.25rem;line-height:1.5}
 html[lang="ja"] .step h3{font-size:1.4rem}
 .step p{color:var(--muted);font-size:.96rem;margin:0}
 
-/* Illustrative explainable score */
-.explain{display:grid;grid-template-columns:1fr 1.15fr;gap:clamp(28px,5vw,72px);align-items:center;margin-top:clamp(64px,10vh,110px)}
-.card{background:var(--surface);border:1px solid var(--hairline);border-radius:20px;padding:clamp(22px,3vw,34px);box-shadow:var(--shadow)}
-.card .top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;padding-bottom:20px;
-  border-bottom:1px solid var(--hairline)}
-.card .tag{font-size:.68rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--faint)}
-.card .ent{font-family:var(--display);font-size:1.45rem;line-height:1.15;margin-top:6px}
-.score{text-align:right}
-.score .v{font-family:'Instrument Serif',Georgia,serif;font-size:3.4rem;line-height:.9;color:var(--critical)}
-.score .band{display:inline-block;margin-top:6px;font-size:.68rem;font-weight:600;letter-spacing:.18em;text-transform:uppercase;
-  color:#fff;background:var(--critical);padding:3px 9px;border-radius:999px}
-.factors{list-style:none;margin:0;padding:20px 0;display:flex;flex-direction:column;gap:14px}
-.factors li{display:grid;grid-template-columns:1fr auto;gap:6px 14px;font-size:.9rem}
-.factors .bar{grid-column:1 / -1;height:6px;border-radius:999px;background:var(--surface-2);overflow:hidden}
-.factors .bar i{display:block;height:100%;border-radius:999px;background:var(--c,var(--critical));
-  transform-origin:left;transform:scaleX(var(--w));transition:transform 1.2s cubic-bezier(.2,.7,.2,1)}
-.js .card:not(.in) .factors .bar i{transform:scaleX(0)}
-.factors .n{font-variant-numeric:tabular-nums;color:var(--muted)}
-.action{border-top:1px solid var(--hairline);padding-top:18px;font-size:.95rem}
-.action b{display:block;font-size:.68rem;font-weight:600;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);margin-bottom:6px}
-.illus{margin-top:14px;font-size:.78rem;color:var(--faint)}
-
 /* Beliefs */
 .beliefs{display:grid;grid-template-columns:1fr 1fr;gap:0 clamp(32px,6vw,90px)}
 .belief{padding:30px 0;border-top:1px solid var(--hairline-strong);display:grid;grid-template-columns:52px 1fr;gap:4px 10px}
@@ -184,26 +162,6 @@ html[lang="ja"] .step h3{font-size:1.4rem}
 .belief h3{font-size:clamp(1.5rem,2.2vw,1.9rem);line-height:1.15;margin-bottom:8px}
 html[lang="ja"] .belief h3{font-size:1.3rem;line-height:1.5}
 .belief p{grid-column:2;color:var(--muted);margin:0;font-size:.98rem}
-
-/* Where — two markets */
-.markets{display:grid;grid-template-columns:1fr 1fr;gap:clamp(16px,2vw,24px)}
-.market{position:relative;overflow:hidden;border-radius:22px;padding:clamp(28px,4vw,48px);min-height:440px;color:var(--on-night);
-  display:flex;flex-direction:column;justify-content:flex-end;isolation:isolate}
-.market::before{content:"";position:absolute;inset:0;z-index:-1;
-  background:var(--bg)}
-.market.jp{--bg:radial-gradient(120% 80% at 90% 0%,#5A231C 0%,#1A1310 60%,#0D110C 100%);--cx:82%;--cy:18%}
-.market.eu{--bg:radial-gradient(120% 80% at 90% 0%,#2B4637 0%,#121A14 60%,#0D110C 100%);--cx:78%;--cy:24%}
-.market .where{font-size:.72rem;font-weight:600;letter-spacing:.22em;text-transform:uppercase;color:var(--on-night-muted);
-  display:flex;justify-content:space-between;gap:12px;margin-bottom:auto;padding-bottom:40px}
-.market .where .st{color:var(--on-night)}
-.market h3{font-size:clamp(2rem,3.6vw,3rem);line-height:1.02;margin-bottom:16px}
-html[lang="ja"] .market h3{font-size:clamp(1.6rem,2.8vw,2.2rem);line-height:1.35}
-.market p{color:var(--on-night-muted);margin:0;max-width:44ch}
-html[lang="ja"] .market p{max-width:none}
-.market .mandate{margin-top:22px;padding-top:16px;border-top:1px solid rgba(233,236,227,.16);font-size:.84rem;color:var(--on-night)}
-.market .mandate b{display:block;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:var(--on-night-muted);font-weight:600;margin-bottom:2px}
-.oneplatform{margin-top:clamp(28px,4vh,40px);color:var(--muted);max-width:64ch}
-.oneplatform strong{color:var(--ink);font-weight:600}
 
 /* Closing */
 .closing{background:var(--night);color:var(--on-night);border-top:0;overflow:hidden;isolation:isolate}
@@ -235,11 +193,10 @@ footer a{text-decoration:none}
   .shifts{grid-template-columns:1fr}
   .steps{grid-template-columns:1fr 1fr;row-gap:44px}
   .steps::before{display:none}
-  .explain,.markets,.beliefs{grid-template-columns:1fr}
+  .beliefs{grid-template-columns:1fr}
   .versus{grid-template-columns:1fr 1fr}
   .versus .k{grid-column:1 / -1;padding:18px 0 0;border-bottom:0}
   .versus .blank{display:none}
-  .market{min-height:380px}
 }
 @media (max-width:640px){
   body{font-size:17px}
