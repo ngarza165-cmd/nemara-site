@@ -110,7 +110,7 @@
       ctx.fillStyle = g; ctx.fillRect(0, horizon - 70, W, 100);
 
       // Ridges, far to near; each filled in the sky colour so nearer ranges hide farther ones
-      var camX = reduce ? 0 : t * 0.000012, step = W >= 900 ? 5 : 4;
+      var camX = reduce ? 0 : t * 0.00008, step = W >= 900 ? 5 : 4;
       var lines = Math.round((Z_FAR - Z_NEAR) / DZ);
       for (var k = lines; k >= 0; k--) {
         var zr = Z_NEAR + k * DZ, scale = F / zr;
